@@ -18,37 +18,26 @@
 
     /* Profile */
     header { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; }
-    .menu-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; }
-    nav { display: none; }
-    nav.open { display: block; margin: .5rem 1rem; }
-    nav ul { list-style: none; padding: 0; margin: 0; }
-    nav li { margin: .3rem 0; }
-    nav a { color: var(--accent); text-decoration: none; }
     .profile { text-align: center; padding: 1rem; }
-
-    /* Profile picture with story ring */
     .profile img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; cursor:pointer; position:relative; }
     .profile img.has-story::before {
       content: '';
-      position: absolute;
-      top: -6px; left: -6px; right: -6px; bottom: -6px;
+      position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
       border-radius: 50%;
       background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-      z-index: -1;
-      animation: spin 3s linear infinite;
+      z-index: -1; animation: spin 3s linear infinite;
     }
     @keyframes spin { from{transform:rotate(0);} to{transform:rotate(360deg);} }
-
-    .creator-name { font-size: 1.5rem; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: .3rem; margin-top: .5rem; }
-    .verified { color: var(--accent); font-size: 1.2rem; }
+    .creator-name { font-size: 1.5rem; font-weight: 600; margin-top: .5rem; }
     .username { color: var(--muted); margin-bottom: .5rem; }
     .stats { display: flex; justify-content: center; gap: 2rem; margin: 1rem 0; }
-    .stat strong { display: block; font-size: 1.2rem; }
     .actions { display: flex; gap: .5rem; justify-content: center; margin-bottom: 1rem; }
     .actions button { flex: 1; padding: .6rem; border-radius: var(--radius); border: 0; cursor: pointer; font-weight: 600; }
     .subscribe { background: var(--accent); color: white; }
     .message { background: #e5e7eb; }
-    .donate { background: #facc15; } /* Yellow */
+    .donate { background: #facc15; }
+
+    /* Tabs */
     .tabs { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; border-bottom: 2px solid #e5e7eb; }
     .tab-btn { background: none; border: none; padding: .5rem 1rem; cursor: pointer; font-weight: 600; color: var(--muted); }
     .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
@@ -60,42 +49,10 @@
 
     /* Chat */
     .chat-screen { display: none; flex-direction: column; height: 100vh; background: #fff; }
-    .chat-header { display:flex; align-items:center; justify-content:space-between; padding:.6rem 1rem; border-bottom:1px solid #e5e7eb; background:#fff; position:sticky; top:0; z-index:10;}
-    .chat-header-left { display: flex; align-items: center; gap: .6rem; }
-    .chat-header-left img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-    .chat-user-info { display: flex; flex-direction: column; line-height: 1.2; }
-    .chat-user-info strong { font-size: .95rem; }
-    .online { font-size: .75rem; color: green; }
-    .chat-header-right { display:flex; align-items:center; gap:1rem; font-size:1.2rem; }
-    .chat-header button { background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--fg);}
-    .chat-messages { flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:.5rem; background:#f3f4f6; }
-    .msg-wrapper { display:flex; flex-direction:column; align-items:flex-end; }
-    .msg { max-width:70%; padding:.6rem .9rem; border-radius:var(--radius); line-height:1.4; font-size:.9rem; word-wrap:break-word; }
-    .creator-msg { background:#e5e7eb; align-self:flex-start; }
-    .user-msg { background:var(--accent); color:white; }
-    .seen { font-size:.7rem; color:var(--muted); margin-top:.2rem; margin-right:.3rem; }
-    .typing { font-size:.8rem; color:var(--muted); font-style:italic; margin:.2rem 0; }
-    .chat-input { display:flex; align-items:center; padding:.5rem; border-top:1px solid #e5e7eb; background:white;}
-    .chat-input input { flex:1; padding:.6rem; border:1px solid #d1d5db; border-radius:20px; outline:none;}
-    .chat-input button { background:none; border:none; font-size:1.2rem; margin-left:.6rem; cursor:pointer; color:var(--accent);}
 
     /* Donation Modals */
     .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
-    .modal-content { background:#fff; padding:20px; border-radius:12px; max-width:420px; width:90%; text-align:center; box-shadow:0 4px 10px rgba(0,0,0,0.2); position:relative; }
-    .close-x-button { position:absolute; top:10px; right:15px; font-size:20px; cursor:pointer; background:none; border:none; }
-    .qr-code { border:2px solid #f7931a; border-radius:10px; padding:8px; margin:10px auto; background:white; width:100%; max-width:200px; display:block; }
-    .wallet-address-container { display:flex; align-items:center; justify-content:center; margin:10px 0; flex-wrap:wrap; gap:8px; }
-    .wallet-address { word-break:break-all; font-family:monospace; font-size:13px; color:#444; padding:8px 10px; background:#f1f1f1; border-radius:5px; flex:1; text-align:center; }
-    .copy-button { background:#28a745; color:white; padding:6px 12px; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
-    .copy-button:hover { background:#218838; }
-    .status-message { font-size:14px; margin-top:10px; display:none; }
-    .status-success { color:#28a745; }
-    .status-error { color:#dc3545; }
-    .donate-button { background:linear-gradient(45deg,#f7931a,#ffbf00); color:white; padding:12px 24px; border:none; border-radius:25px; cursor:pointer; font-size:16px; font-weight:bold; margin-top:12px; box-shadow:0 4px 8px rgba(247,147,26,0.3);}
-    .modal-button { padding:10px 20px; margin:5px; border:none; border-radius:20px; cursor:pointer; font-size:16px; font-weight:600; color:white;}
-    .btc-button { background:linear-gradient(45deg,#f7931a,#ffbf00); }
-    .paypal-button { background:#0070ba; }
-    .back-button { background:#f7931a; color:white; border:none; border-radius:20px; padding:8px 16px; margin-top:10px; cursor:pointer;}
+    .modal-content { background:#fff; padding:20px; border-radius:12px; max-width:420px; width:90%; text-align:center; }
 
     /* Story Modal */
     .story-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center;}
@@ -107,28 +64,27 @@
     .progress-bar-fill { height:100%; background:#fff; width:0%; }
     .story-count { position:absolute; top:20px; left:20px; color:white; font-size:12px; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:12px; font-weight:500;}
     .btn { background:transparent; border:none; width:40px; height:40px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
-    .close-btn { position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); border-radius:50%; width:36px; height:36px;}
-    .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); border-radius:50%; width:36px; height:36px; z-index:10; display:none;}
+    .close-btn { position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); border-radius:50%; }
+    .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); border-radius:50%; display:none;}
     .nav-btn.visible { display:flex; }
     .nav-btn-left { left:10px; }
     .nav-btn-right { right:10px; }
+    .story-controls { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:10px; width:90%; }
+    .reply-input { flex:1; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:10px 15px; color:white; }
+    .send-btn { display:none; }
+    .send-btn.visible { display:flex; }
+    .like-btn.liked svg { fill: #ed4956; }
+    svg { fill: #fff; width: 24px; height: 24px; }
   </style>
 </head>
 <body>
-  <!-- Main Profile -->
   <div class="container main-screen">
-    <header>
-      <h1 style="margin:0;font-size:1.25rem">Creator</h1>
-      <button class="menu-btn">☰</button>
-    </header>
+    <header><h1>Creator</h1></header>
     <section class="profile">
-      <img src="profile.png" alt="Creator profile picture" class="has-story" id="profilePic">
-      <div class="creator-name">Sofia Creator <span class="verified">✔</span></div>
+      <img src="profile.png" alt="Profile" class="has-story" id="profilePic">
+      <div class="creator-name">Sofia Creator ✔</div>
       <div class="username">@sofia123</div>
-      <div class="stats">
-        <div class="stat"><strong>15.2k</strong> Followers</div>
-        <div class="stat"><strong>320k</strong> Likes</div>
-      </div>
+      <div class="stats"><div><strong>15.2k</strong> Followers</div><div><strong>320k</strong> Likes</div></div>
       <div class="actions">
         <button class="subscribe">Subscribe</button>
         <button class="message">Message</button>
@@ -136,63 +92,15 @@
       </div>
     </section>
 
-    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="photos">Photos</button>
       <button class="tab-btn" data-tab="reels">Reels</button>
       <button class="tab-btn" data-tab="exclusive">Exclusive</button>
     </div>
-    <section id="photos" class="tab-content active">
-      <div class="media-grid">
-        <img src="photo1.jpg" alt="Photo 1">
-        <img src="photo2.jpg" alt="Photo 2">
-      </div>
-    </section>
-    <section id="reels" class="tab-content">
-      <div class="media-grid"><video src="reels1.mp4" controls></video></div>
-    </section>
-    <section id="exclusive" class="tab-content">
-      <p style="text-align:center;color:var(--muted)">Subscribe to unlock exclusive content ✨</p>
-    </section>
-    <footer>&copy; <span id="year"></span> Sofia Creator</footer>
-  </div>
-
-  <!-- Chat Screen -->
-  <div class="chat-screen container">
-    <div class="chat-header">
-      <div class="chat-header-left">
-        <button class="back-btn">←</button>
-        <img src="profile.png" alt="Creator">
-        <div class="chat-user-info"><strong>Sofia Creator</strong><span class="online">Online</span></div>
-      </div>
-    </div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input"><input type="text" id="chatInput" placeholder="Message..."><button id="sendBtn">➤</button></div>
-  </div>
-
-  <!-- Donation Modals -->
-  <div id="chooseMethodModal" class="modal">
-    <div class="modal-content">
-      <button class="close-x-button" onclick="closeModal('chooseMethodModal')">X</button>
-      <h3>Choose Your Donation Method</h3>
-      <button class="modal-button btc-button" onclick="showBtcModal()">Bitcoin</button>
-      <form action="https://www.paypal.com/donate" method="post" target="_blank" style="display:inline;">
-        <input type="hidden" name="business" value="YOUR_PAYPAL_EMAIL@EXAMPLE.COM"/>
-        <input type="hidden" name="currency_code" value="USD"/>
-        <input type="submit" class="modal-button paypal-button" value="PayPal"/>
-      </form>
-    </div>
-  </div>
-  <div id="btcModal" class="modal">
-    <div class="modal-content">
-      <button class="close-x-button" onclick="closeModal('btcModal')">X</button>
-      <h3>Support Us with Bitcoin! 🚀</h3>
-      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n" class="qr-code">
-      <div class="wallet-address-container"><div class="wallet-address" id="btcAddress">bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n</div><button class="copy-button" onclick="copyToClipboard()">Copy</button></div>
-      <div id="statusMessage" class="status-message"></div>
-      <button class="donate-button" onclick="openDonationPage()">Donate BTC Now</button>
-      <button class="back-button" onclick="goBackToChooseMethod()">Back</button>
-    </div>
+    <section id="photos" class="tab-content active"><div class="media-grid"><img src="photo1.jpg"></div></section>
+    <section id="reels" class="tab-content"><div class="media-grid"><video src="reels1.mp4" controls></video></div></section>
+    <section id="exclusive" class="tab-content"><p>Subscribe to unlock ✨</p></section>
+    <footer>&copy; <span id="year"></span></footer>
   </div>
 
   <!-- Story Modal -->
@@ -202,9 +110,14 @@
       <div class="story-count" id="storyCount"></div>
       <img src="story1.jpg" class="story-image active" data-index="0">
       <img src="story2.jpg" class="story-image" data-index="1">
-      <button class="btn close-btn" id="closeBtn">X</button>
+      <button class="btn close-btn" id="closeBtn">✕</button>
       <button class="btn nav-btn nav-btn-left" id="prevBtn">◀</button>
       <button class="btn nav-btn nav-btn-right" id="nextBtn">▶</button>
+      <div class="story-controls">
+        <input type="text" class="reply-input" id="replyInput" placeholder="Reply...">
+        <button class="btn send-btn" id="sendBtn">➤</button>
+        <button class="btn like-btn" id="likeBtn">♥</button>
+      </div>
     </div>
   </div>
 
@@ -212,39 +125,28 @@
 document.getElementById("year").textContent = new Date().getFullYear();
 
 /* Tabs */
-document.querySelectorAll(".tab-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.remove("active"));
-    document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
-    btn.classList.add("active");
-    document.getElementById(btn.dataset.tab).classList.add("active");
-  });
-});
-
-/* Donation */
-document.getElementById("openDonate").onclick=()=>showModal('chooseMethodModal');
-function showModal(id){document.getElementById(id).style.display='flex';}
-function closeModal(id){document.getElementById(id).style.display='none';}
-function showBtcModal(){closeModal('chooseMethodModal');showModal('btcModal');}
-function goBackToChooseMethod(){closeModal('btcModal');showModal('chooseMethodModal');}
-const btcAddress=document.getElementById("btcAddress").textContent.trim();
-function copyToClipboard(){navigator.clipboard.writeText(btcAddress).then(()=>showStatus("Copied!","success")).catch(()=>showStatus("Fail","error"));}
-function showStatus(m,t){const s=document.getElementById("statusMessage");s.textContent=m;s.className="status-message status-"+t;s.style.display="block";setTimeout(()=>s.style.display="none",3000);}
-function openDonationPage(){window.open("https://www.blockchain.com/explorer/addresses/btc/"+btcAddress,"_blank");closeModal('btcModal');}
+document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");});
 
 /* Stories */
-const profilePic=document.getElementById('profilePic'),storyModal=document.getElementById('storyModal');
-const closeBtn=document.getElementById('closeBtn'),storyImages=document.querySelectorAll('.story-image');
-const progressBars=document.getElementById('progressBars'),storyCount=document.getElementById('storyCount');
-let currentStory=0,timer,total=storyImages.length;const duration=5000;
-function createBars(){progressBars.innerHTML='';storyImages.forEach(()=>{let b=document.createElement('div');b.className='progress-bar';let f=document.createElement('div');f.className='progress-bar-fill';b.appendChild(f);progressBars.appendChild(b)});}
-function showStory(i){clearTimeout(timer);storyImages.forEach(im=>im.classList.remove('active'));storyImages[i].classList.add('active');let bars=document.querySelectorAll('.progress-bar-fill');bars.forEach((bar,j)=>{bar.style.transition='none';bar.style.width=j<i?'100%':'0%';});void progressBars.offsetWidth;bars[i].style.transition=`width ${duration}ms linear`;requestAnimationFrame(()=>bars[i].style.width='100%');storyCount.textContent=`${i+1}/${total}`;currentStory=i;}
-function start(){timer=setTimeout(()=>{if(currentStory<total-1){showStory(currentStory+1);start();}else closeStory();},duration);}
-function closeStory(){clearTimeout(timer);storyModal.style.display='none';currentStory=0;}
-profilePic.onclick=()=>{storyModal.style.display='flex';createBars();showStory(0);start();};
+const profilePic=document.getElementById('profilePic'),storyModal=document.getElementById('storyModal'),closeBtn=document.getElementById('closeBtn');
+const replyInput=document.getElementById('replyInput'),sendBtn=document.getElementById('sendBtn'),likeBtn=document.getElementById('likeBtn');
+const prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn');
+const storyImages=document.querySelectorAll('.story-image'),barsBox=document.getElementById('progressBars'),count=document.getElementById('storyCount');
+let idx=0,timer,total=storyImages.length,duration=5000,isLiked=false;
+
+function makeBars(){barsBox.innerHTML='';storyImages.forEach(()=>{let b=document.createElement('div');b.className='progress-bar';let f=document.createElement('div');f.className='progress-bar-fill';b.appendChild(f);barsBox.appendChild(b)});}
+function showStory(i){clearTimeout(timer);storyImages.forEach(im=>im.classList.remove('active'));storyImages[i].classList.add('active');let fills=document.querySelectorAll('.progress-bar-fill');fills.forEach((f,j)=>{f.style.transition='none';f.style.width=j<i?'100%':'0%';});void barsBox.offsetWidth;fills[i].style.transition=`width ${duration}ms linear`;requestAnimationFrame(()=>fills[i].style.width='100%');count.textContent=`${i+1}/${total}`;idx=i;isLiked=false;likeBtn.classList.remove('liked');updateNav();}
+function updateNav(){prevBtn.classList.toggle('visible',idx>0);nextBtn.classList.toggle('visible',idx<total-1);}
+function startTimer(){timer=setTimeout(()=>{if(idx<total-1){showStory(idx+1);startTimer();}else closeStory();},duration);}
+function closeStory(){clearTimeout(timer);storyModal.style.display='none';idx=0;replyInput.value='';sendBtn.classList.remove('visible');}
+
+profilePic.onclick=()=>{storyModal.style.display='flex';makeBars();showStory(0);startTimer();};
 closeBtn.onclick=closeStory;
-document.getElementById('prevBtn').onclick=()=>{if(currentStory>0){showStory(currentStory-1);start();}};
-document.getElementById('nextBtn').onclick=()=>{if(currentStory<total-1){showStory(currentStory+1);start();}else closeStory();};
+replyInput.oninput=()=>sendBtn.classList.toggle('visible',!!replyInput.value.trim());
+sendBtn.onclick=()=>{if(replyInput.value.trim()){alert("Reply: "+replyInput.value);replyInput.value='';sendBtn.classList.remove('visible');}};
+likeBtn.onclick=()=>{isLiked=!isLiked;likeBtn.classList.toggle('liked',isLiked);alert(isLiked?"Liked":"Unliked");};
+prevBtn.onclick=()=>{if(idx>0){clearTimeout(timer);showStory(idx-1);startTimer();}};
+nextBtn.onclick=()=>{if(idx<total-1){clearTimeout(timer);showStory(idx+1);startTimer();}else closeStory();};
 </script>
 </body>
 </html>
