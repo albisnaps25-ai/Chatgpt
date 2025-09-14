@@ -35,7 +35,7 @@
     .actions button { flex: 1; padding: .6rem; border-radius: var(--radius); border: 0; cursor: pointer; font-weight: 600; }
     .subscribe { background: var(--accent); color: white; }
     .message { background: #e5e7eb; }
-    .share { background: #d1fae5; }
+    .donate { background: #facc15; } /* Yellow */
     .tabs { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; border-bottom: 2px solid #e5e7eb; }
     .tab-btn { background: none; border: none; padding: .5rem 1rem; cursor: pointer; font-weight: 600; color: var(--muted); }
     .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
@@ -90,8 +90,8 @@
 
     <section class="profile">
       <img src="https://via.placeholder.com/120" alt="Creator profile picture">
-      <div class="creator-name">Alex Creator <span class="verified">✔</span></div>
-      <div class="username">@alex123</div>
+      <div class="creator-name">Sofia Creator <span class="verified">✔</span></div>
+      <div class="username">@sofia123</div>
       <div class="stats">
         <div class="stat"><strong>15.2k</strong> Followers</div>
         <div class="stat"><strong>320k</strong> Likes</div>
@@ -99,7 +99,7 @@
       <div class="actions">
         <button class="subscribe">Subscribe</button>
         <button class="message">Message</button>
-        <button class="share">Share</button>
+        <button class="donate">Donate</button>
       </div>
     </section>
 
@@ -127,7 +127,7 @@
       <p style="text-align:center;color:var(--muted)">Subscribe to unlock exclusive content ✨</p>
     </section>
 
-    <footer>&copy; <span id="year"></span> Alex Creator</footer>
+    <footer>&copy; <span id="year"></span> Sofia Creator</footer>
   </div>
 
   <!-- Chat Screen -->
@@ -137,7 +137,7 @@
         <button class="back-btn">←</button>
         <img src="https://via.placeholder.com/40" alt="Creator">
         <div class="chat-user-info">
-          <strong>Alex Creator</strong>
+          <strong>Sofia Creator</strong>
           <span class="online">Online</span>
         </div>
       </div>
@@ -208,7 +208,7 @@
     function showTyping() {
       const typing = document.createElement("div");
       typing.className = "typing";
-      typing.textContent = "Alex is typing...";
+      typing.textContent = "Sofia is typing...";
       chatMessages.appendChild(typing);
       chatMessages.scrollTop = chatMessages.scrollHeight;
       return typing;
