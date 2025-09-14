@@ -695,7 +695,7 @@
       <section class="profile" aria-labelledby="creator-profile">
         <h2 id="creator-profile" class="sr-only">Creator Profile</h2>
         <div class="profile-pic-wrapper">
-          <img id="profilePic" class="profile-pic has-story" src="https://via.placeholder.com/120" alt="Sofia Creator's profile picture">
+          <img id="profilePic" class="profile-pic has-story" src="profile.png" alt="Sofia Creator's profile picture">
         </div>
         <div class="creator-name">Sofia Creator <span class="verified" aria-label="Verified">✔</span></div>
         <div class="username">@sofia123</div>
@@ -710,13 +710,11 @@
         </div>
       </section>
 
-      <!-- TABS SECTION (with merged changes) -->
-      <div class="tabs">
+      <nav class="tabs" aria-label="Content navigation">
         <button class="tab-btn active" data-tab="photos" aria-current="true" aria-label="View Photos">Photos</button>
         <button class="tab-btn" data-tab="reels" aria-label="View Reels">Reels</button>
         <button class="tab-btn" data-tab="exclusive" aria-label="View Exclusive Content">Exclusive</button>
-      </div>
-      <!-- Tab contents -->
+      </nav>
       <section id="photos" class="tab-content active" aria-labelledby="photos-tab">
         <h2 id="photos-tab" class="sr-only">Photos</h2>
         <div class="media-grid">
@@ -742,8 +740,6 @@
         </div>
         <p class="subscribe-prompt">Subscribe to unlock exclusive content ✨ <a href="#subscribe">Join now</a></p>
       </section>
-      <!-- END TABS SECTION -->
-
     </main>
 
     <footer>
@@ -757,7 +753,7 @@
     <div class="chat-header">
       <div class="chat-header-left">
         <button class="btn" id="backToMain" aria-label="Back to main page">←</button>
-        <img src="https://via.placeholder.com/40" alt="Sofia Creator">
+        <img src="profile.png" alt="Sofia Creator">
         <div class="chat-user-info">
           <strong>Sofia Creator</strong>
           <span class="online">Online</span>
@@ -810,12 +806,12 @@
   </div>
 
   <div id="storyModal" class="story-modal" role="dialog" aria-label="View stories">
-    <div class="story-container">
+    <div class="story-container" id="storyContainer">
       <div id="progressBars" class="progress-bars" aria-hidden="true"></div>
       <div id="storyCount" class="story-count"></div>
-      <img src="https://via.placeholder.com/414x896/ff6b6b/ffffff?text=Story+1" class="story-image active" data-index="0" alt="Story 1 by Sofia Creator">
-      <img src="https://via.placeholder.com/414x896/4ecdc4/ffffff?text=Story+2" class="story-image" data-index="1" alt="Story 2 by Sofia Creator">
-      <img src="https://via.placeholder.com/414x896/45b7d1/ffffff?text=Story+3" class="story-image" data-index="2" alt="Story 3 by Sofia Creator">
+      <img src="profile.png" class="story-image active" data-index="0" alt="Story 1 by Sofia Creator">
+      <img src="profile.png" class="story-image" data-index="1" alt="Story 2 by Sofia Creator">
+      <img src="profile.png" class="story-image" data-index="2" alt="Story 3 by Sofia Creator">
       <button class="btn close-btn" id="storyCloseBtn" aria-label="Close story modal">✕</button>
       <button class="btn nav-btn nav-btn-left" id="prevStoryBtn" aria-label="Previous story">◀</button>
       <button class="btn nav-btn nav-btn-right" id="nextStoryBtn" aria-label="Next story">▶</button>
