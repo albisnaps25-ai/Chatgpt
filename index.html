@@ -1,152 +1,736 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Creator Profile with Stories</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Creator Profile — Full (Stories + Chat + Donate)</title>
   <style>
-    :root {
-      --bg: #f9fafb;
-      --fg: #111827;
-      --accent: #2563eb;
-      --muted: #6b7280;
-      --radius: 20px;
-      font-family: system-ui, sans-serif;
+    :root{
+      --bg:#f9fafb; --fg:#111827; --accent:#2563eb; --muted:#6b7280; --radius:20px;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
     }
-    body { margin: 0; background: var(--bg); color: var(--fg); }
-    .container { max-width: 800px; margin: auto; }
+    body{ margin:0; background:var(--bg); color:var(--fg); }
+    .container{ max-width:900px; margin:0 auto; padding:0 16px; }
 
-    /* Profile */
-    header { display: flex; justify-content: space-between; align-items: center; padding: .8rem 1rem; }
-    .profile { text-align: center; padding: 1rem; }
-    .profile img { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; cursor:pointer; position:relative; }
-    .profile img.has-story::before {
-      content: '';
-      position: absolute; top: -6px; left: -6px; right: -6px; bottom: -6px;
-      border-radius: 50%;
+    /* Header/Profile */
+    header{ display:flex; justify-content:space-between; align-items:center; padding:.8rem 0; }
+    .menu-btn{ background:none; border:none; font-size:1.4rem; cursor:pointer; }
+    nav{ display:none; }
+    nav.open{ display:block; margin:.5rem 0; }
+    nav ul{ padding:0; margin:0; list-style:none; }
+    .profile{ text-align:center; padding: 1rem 0; }
+    .profile-pic-wrapper{ position:relative; display:inline-block; }
+    /* profile image + story ring */
+    .profile img.profile-pic{ width:120px; height:120px; border-radius:50%; object-fit:cover; cursor:pointer; display:block; }
+    .profile img.has-story::before{
+      content:''; position:absolute; top:-6px; left:-6px; right:-6px; bottom:-6px; border-radius:50%;
       background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-      z-index: -1; animation: spin 3s linear infinite;
+      z-index:-1; animation: spin 3s linear infinite;
     }
-    @keyframes spin { from{transform:rotate(0);} to{transform:rotate(360deg);} }
-    .creator-name { font-size: 1.5rem; font-weight: 600; margin-top: .5rem; }
-    .username { color: var(--muted); margin-bottom: .5rem; }
-    .stats { display: flex; justify-content: center; gap: 2rem; margin: 1rem 0; }
-    .actions { display: flex; gap: .5rem; justify-content: center; margin-bottom: 1rem; }
-    .actions button { flex: 1; padding: .6rem; border-radius: var(--radius); border: 0; cursor: pointer; font-weight: 600; }
-    .subscribe { background: var(--accent); color: white; }
-    .message { background: #e5e7eb; }
-    .donate { background: #facc15; }
+    @keyframes spin{ from{transform:rotate(0);} to{transform:rotate(360deg);} }
 
-    /* Tabs */
-    .tabs { display: flex; justify-content: center; gap: 1rem; margin: 1rem 0; border-bottom: 2px solid #e5e7eb; }
-    .tab-btn { background: none; border: none; padding: .5rem 1rem; cursor: pointer; font-weight: 600; color: var(--muted); }
-    .tab-btn.active { color: var(--accent); border-bottom: 3px solid var(--accent); }
-    .tab-content { display: none; margin-top: 1rem; }
-    .tab-content.active { display: block; }
-    .media-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap: .5rem; }
-    .media-grid img, .media-grid video { width: 100%; height: 200px; object-fit: cover; border-radius: var(--radius); }
-    footer { text-align: center; margin: 2rem 0; color: var(--muted); font-size: .9rem; }
+    .creator-name{ font-size:1.4rem; font-weight:700; margin-top:.6rem; display:flex; align-items:center; gap:.35rem; justify-content:center; }
+    .verified{ color:var(--accent); font-size:1.1rem; }
+    .username{ color:var(--muted); margin-top:.25rem; }
+    .stats{ display:flex; justify-content:center; gap:2rem; margin:1rem 0; }
+    .stat strong{ display:block; font-size:1.1rem; }
+    .actions{ display:flex; gap:.6rem; justify-content:center; margin-bottom:1rem; }
+    .actions button{ padding:.6rem .8rem; border-radius:var(--radius); border:0; cursor:pointer; font-weight:600; }
+    .subscribe{ background:var(--accent); color:#fff; }
+    .message{ background:#e5e7eb; }
+    .donate{ background:#facc15; }
+
+    /* Tabs / media */
+    .tabs{ display:flex; justify-content:center; gap:1rem; margin:1rem 0; border-bottom:2px solid #eaeef2; }
+    .tab-btn{ background:none; border:none; padding:.5rem 1rem; cursor:pointer; font-weight:600; color:var(--muted); }
+    .tab-btn.active{ color:var(--accent); border-bottom:3px solid var(--accent); }
+    .tab-content{ display:none; margin-top:1rem; }
+    .tab-content.active{ display:block; }
+    .media-grid{ display:grid; grid-template-columns: repeat(auto-fill,minmax(150px,1fr)); gap:.5rem; }
+    .media-grid img,.media-grid video{ width:100%; height:200px; object-fit:cover; border-radius:var(--radius); }
+
+    footer{ text-align:center; margin:2rem 0; color:var(--muted); font-size:.9rem; }
 
     /* Chat */
-    .chat-screen { display: none; flex-direction: column; height: 100vh; background: #fff; }
+    .chat-screen{ display:none; flex-direction:column; height:100vh; background:#fff; position:relative; }
+    .chat-header{ display:flex; align-items:center; gap:.6rem; padding:.6rem 1rem; border-bottom:1px solid #eaeef2; position:sticky; top:0; background:#fff; z-index:20; }
+    .chat-header img{ width:40px; height:40px; border-radius:50%; object-fit:cover; }
+    .chat-messages{ flex:1; overflow-y:auto; padding:1rem; display:flex; flex-direction:column; gap:.5rem; background:#f7fafc; }
+    .msg-wrapper{ display:flex; flex-direction:column; }
+    .msg{ max-width:70%; padding:.6rem .9rem; border-radius:16px; line-height:1.4; font-size:.95rem; word-wrap:break-word; }
+    .creator-msg{ background:#eaeef2; align-self:flex-start; }
+    .user-msg{ background:var(--accent); color:#fff; align-self:flex-end; }
+    .seen{ font-size:.7rem; color:var(--muted); margin-top:.2rem; }
+    .typing{ font-style:italic; color:var(--muted); margin:.2rem 0; }
+    .chat-input{ display:flex; align-items:center; gap:.6rem; padding:.6rem; border-top:1px solid #eaeef2; background:#fff; }
+    .chat-input input{ flex:1; padding:.6rem; border:1px solid #e2e8f0; border-radius:20px; outline:none; }
 
-    /* Donation Modals */
-    .modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); justify-content:center; align-items:center; }
-    .modal-content { background:#fff; padding:20px; border-radius:12px; max-width:420px; width:90%; text-align:center; }
+    /* Donation modal (choose & btc) */
+    .modal{ display:none; position:fixed; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; justify-content:center; align-items:center; }
+    .modal-content{ background:#fff; padding:26px 20px; border-radius:12px; max-width:440px; width:92%; text-align:center; box-shadow:0 8px 24px rgba(0,0,0,0.12); position:relative; }
+    .close-x-button{ position:absolute; right:12px; top:10px; background:transparent; border:none; font-size:16px; cursor:pointer; }
+    .modal-buttons-container{ display:flex; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:12px; }
+    .modal-button{ padding:10px 18px; border-radius:20px; border:0; font-weight:600; color:#fff; cursor:pointer; }
+    .btc-button{ background:linear-gradient(45deg,#f7931a,#ffbf00); }
+    .paypal-button{ background:#0070ba; }
+    .back-button{ margin-top:12px; background:linear-gradient(45deg,#f7931a,#ffbf00); color:#fff; padding:8px 16px; border-radius:20px; border:0; cursor:pointer; }
+    .qr-code{ border:2px solid #f7931a; border-radius:8px; padding:6px; width:100%; max-width:200px; display:block; margin:10px auto; background:#fff; }
+    .wallet-address-container{ display:flex; align-items:center; justify-content:center; gap:8px; flex-wrap:wrap; margin-top:10px; }
+    .wallet-address{ font-family:monospace; font-size:13px; background:#f6f6f6; padding:8px 10px; border-radius:6px; color:#333; }
+    .copy-button{ background:#28a745; color:#fff; border:0; padding:6px 10px; border-radius:6px; cursor:pointer; }
+    .status-message{ font-size:14px; margin-top:10px; display:none; }
+    .status-success{ color:#28a745; }
+    .status-error{ color:#dc3545; }
+    .donate-button{ margin-top:12px; background:linear-gradient(45deg,#f7931a,#ffbf00); color:white; border:0; padding:10px 18px; border-radius:20px; cursor:pointer; }
 
-    /* Story Modal */
-    .story-modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center;}
-    .story-container { position:relative; width:100%; height:100%; max-width:414px; display:flex; justify-content:center; align-items:center; background:#000; border-radius:12px; overflow:hidden;}
-    .story-image { width:100%; height:100%; object-fit:cover; display:none;}
-    .story-image.active { display:block; }
-    .progress-bars { position:absolute; top:10px; left:10px; right:10px; height:2px; display:flex; gap:4px; }
-    .progress-bar { flex:1; height:100%; background:rgba(255,255,255,0.3); border-radius:2px; overflow:hidden;}
-    .progress-bar-fill { height:100%; background:#fff; width:0%; }
-    .story-count { position:absolute; top:20px; left:20px; color:white; font-size:12px; background:rgba(0,0,0,0.5); padding:4px 8px; border-radius:12px; font-weight:500;}
-    .btn { background:transparent; border:none; width:40px; height:40px; cursor:pointer; display:flex; align-items:center; justify-content:center;}
-    .close-btn { position:absolute; top:20px; right:20px; background:rgba(0,0,0,0.6); border-radius:50%; }
-    .nav-btn { position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); border-radius:50%; display:none;}
-    .nav-btn.visible { display:flex; }
-    .nav-btn-left { left:10px; }
-    .nav-btn-right { right:10px; }
-    .story-controls { position:absolute; bottom:30px; left:50%; transform:translateX(-50%); display:flex; gap:10px; width:90%; }
-    .reply-input { flex:1; background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.2); border-radius:20px; padding:10px 15px; color:white; }
-    .send-btn { display:none; }
-    .send-btn.visible { display:flex; }
-    .like-btn.liked svg { fill: #ed4956; }
-    svg { fill: #fff; width: 24px; height: 24px; }
+    /* Story modal (full featured) */
+    .story-modal{ display:none; position:fixed; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.95); z-index:2000; justify-content:center; align-items:center; }
+    .story-container{ position:relative; width:100%; height:100%; max-width:420px; display:flex; justify-content:center; align-items:center; overflow:hidden; border-radius:12px; background:#000; }
+    .story-image{ width:100%; height:100%; object-fit:cover; display:none; }
+    .story-image.active{ display:block; }
+    .progress-bars{ position:absolute; top:10px; left:10px; right:10px; height:3px; display:flex; gap:6px; z-index:50; }
+    .progress-bar{ flex:1; height:100%; background:rgba(255,255,255,0.25); border-radius:2px; overflow:hidden; }
+    .progress-bar-fill{ height:100%; background:#fff; width:0%; }
+    .story-count{ position:absolute; top:14px; left:14px; color:#fff; font-size:12px; background:rgba(0,0,0,0.45); padding:6px 8px; border-radius:12px; z-index:60; }
+    .btn{ background:transparent; border:0; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; z-index:60; }
+    .close-btn{ position:absolute; top:14px; right:14px; background:rgba(0,0,0,0.5); border-radius:50%; color:#fff; }
+    .nav-btn{ position:absolute; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.45); border-radius:50%; width:44px; height:44px; display:none; align-items:center; justify-content:center; z-index:60; color:#fff; }
+    .nav-btn.visible{ display:flex; }
+    .nav-btn-left{ left:10px; }
+    .nav-btn-right{ right:10px; }
+    .story-controls{ position:absolute; bottom:28px; left:50%; transform:translateX(-50%); display:flex; gap:10px; width:92%; align-items:center; z-index:60; }
+    .reply-input{ flex:1; background:rgba(255,255,255,0.12); border:1px solid rgba(255,255,255,0.15); border-radius:22px; padding:10px 14px; color:#fff; outline:none; }
+    .reply-input::placeholder{ color: rgba(255,255,255,0.7); }
+    .send-btn{ display:none; background:transparent; border:0; color:#fff; width:40px; height:40px; align-items:center; justify-content:center; cursor:pointer; }
+    .send-btn.visible{ display:flex; }
+    .like-btn svg{ width:22px; height:22px; }
+    .like-btn.liked svg{ fill:#ed4956; transform:scale(1.05); transition:transform .15s ease; }
+
+    /* small screens adjustments */
+    @media (max-width:480px){
+      .profile img.profile-pic{ width:86px; height:86px; }
+      .chat-screen{ height:100vh; }
+    }
   </style>
 </head>
 <body>
   <div class="container main-screen">
-    <header><h1>Creator</h1></header>
-    <section class="profile">
-      <img src="profile.png" alt="Profile" class="has-story" id="profilePic">
-      <div class="creator-name">Sofia Creator ✔</div>
-      <div class="username">@sofia123</div>
-      <div class="stats"><div><strong>15.2k</strong> Followers</div><div><strong>320k</strong> Likes</div></div>
+    <header>
+      <h1 style="margin:0;font-size:1.25rem">Creator</h1>
+      <button class="menu-btn" aria-label="menu">☰</button>
+    </header>
+
+    <nav aria-hidden="true">
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Support</a></li>
+      </ul>
+    </nav>
+
+    <!-- Profile block -->
+    <section class="profile" aria-labelledby="profileHeading">
+      <div class="profile-pic-wrapper">
+        <!-- Story-enabled profile picture -->
+        <img id="profilePic" class="profile-pic has-story" src="profile.png" alt="Creator profile picture">
+      </div>
+
+      <div id="profileInfo">
+        <div class="creator-name">Sofia Creator <span class="verified">✔</span></div>
+        <div class="username">@sofia123</div>
+      </div>
+
+      <div class="stats" aria-hidden="true">
+        <div class="stat"><strong>15.2k</strong><div style="font-size:.85rem;color:var(--muted)">Followers</div></div>
+        <div class="stat"><strong>320k</strong><div style="font-size:.85rem;color:var(--muted)">Likes</div></div>
+      </div>
+
       <div class="actions">
-        <button class="subscribe">Subscribe</button>
-        <button class="message">Message</button>
-        <button class="donate" id="openDonate">Donate</button>
+        <button class="subscribe" type="button">Subscribe</button>
+        <button class="message" type="button">Message</button>
+        <button class="donate" id="openDonate" type="button">Donate</button>
       </div>
     </section>
 
+    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="photos">Photos</button>
       <button class="tab-btn" data-tab="reels">Reels</button>
       <button class="tab-btn" data-tab="exclusive">Exclusive</button>
     </div>
-    <section id="photos" class="tab-content active"><div class="media-grid"><img src="photo1.jpg"></div></section>
-    <section id="reels" class="tab-content"><div class="media-grid"><video src="reels1.mp4" controls></video></div></section>
-    <section id="exclusive" class="tab-content"><p>Subscribe to unlock ✨</p></section>
-    <footer>&copy; <span id="year"></span></footer>
+
+    <section id="photos" class="tab-content active">
+      <div class="media-grid">
+        <img src="photo1.jpg" alt="Photo 1">
+        <img src="photo2.jpg" alt="Photo 2">
+        <img src="photo3.jpg" alt="Photo 3">
+      </div>
+    </section>
+
+    <section id="reels" class="tab-content">
+      <div class="media-grid">
+        <video src="reels1.mp4" controls></video>
+      </div>
+    </section>
+
+    <section id="exclusive" class="tab-content">
+      <div class="media-grid">
+        <img src="exclusive1.jpg" alt="Exclusive content locked">
+      </div>
+      <p style="text-align:center;color:var(--muted)">Subscribe to unlock exclusive content ✨</p>
+    </section>
+
+    <footer>&copy; <span id="year"></span> Sofia Creator</footer>
   </div>
 
-  <!-- Story Modal -->
-  <div class="story-modal" id="storyModal">
-    <div class="story-container">
-      <div class="progress-bars" id="progressBars"></div>
-      <div class="story-count" id="storyCount"></div>
-      <img src="story1.jpg" class="story-image active" data-index="0">
-      <img src="story2.jpg" class="story-image" data-index="1">
-      <button class="btn close-btn" id="closeBtn">✕</button>
-      <button class="btn nav-btn nav-btn-left" id="prevBtn">◀</button>
-      <button class="btn nav-btn nav-btn-right" id="nextBtn">▶</button>
-      <div class="story-controls">
-        <input type="text" class="reply-input" id="replyInput" placeholder="Reply...">
-        <button class="btn send-btn" id="sendBtn">➤</button>
-        <button class="btn like-btn" id="likeBtn">♥</button>
+  <!-- Chat screen -->
+  <div class="chat-screen container" aria-hidden="true">
+    <div class="chat-header">
+      <div style="display:flex;align-items:center;gap:.6rem">
+        <button class="back-btn" aria-label="back">←</button>
+        <img src="profile.png" alt="creator">
+        <div class="chat-user-info">
+          <strong>Sofia Creator</strong>
+          <span class="online" style="font-size:.85rem;color:green">Online</span>
+        </div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:.6rem;align-items:center">
+        <button title="Video">📹</button>
+        <button title="Voice">📞</button>
+      </div>
+    </div>
+
+    <div id="chatMessages" class="chat-messages" aria-live="polite"></div>
+
+    <div class="chat-input">
+      <input id="chatInput" type="text" placeholder="Message...">
+      <button id="sendBtn" aria-label="send">➤</button>
+    </div>
+  </div>
+
+  <!-- Choose donation modal -->
+  <div id="chooseMethodModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="donateTitle">
+      <button class="close-x-button" onclick="closeModal('chooseMethodModal')" aria-label="close">✕</button>
+      <h3 id="donateTitle">Choose Your Donation Method</h3>
+      <p style="color:var(--muted)">Select how you'd like to donate:</p>
+      <div class="modal-buttons-container">
+        <button class="modal-button btc-button" onclick="showBtcModal()">Donate with Bitcoin</button>
+        <form action="https://www.paypal.com/donate" method="post" target="_blank" style="display:inline;">
+          <input type="hidden" name="business" value="YOUR_PAYPAL_EMAIL@EXAMPLE.COM" />
+          <input type="hidden" name="currency_code" value="USD" />
+          <input type="submit" class="modal-button paypal-button" value="Donate with PayPal" />
+        </form>
+      </div>
+      <div style="margin-top:10px;">
+        <button class="back-button" onclick="closeModal('chooseMethodModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bitcoin modal -->
+  <div id="btcModal" class="modal" aria-hidden="true">
+    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="btcTitle">
+      <button class="close-x-button" onclick="closeModal('btcModal')" aria-label="close">✕</button>
+      <h3 id="btcTitle" style="margin-top:6px">Support Us with Bitcoin! 🚀</h3>
+
+      <a id="btcExplorerLink" href="https://www.blockchain.com/explorer/addresses/btc/bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n" target="_blank" rel="noopener noreferrer">
+        <img id="qrCode" class="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n" alt="BTC QR Code for Donations">
+      </a>
+
+      <p style="margin-top:8px;color:var(--muted)">Scan the QR or copy the address below:</p>
+      <div class="wallet-address-container">
+        <div id="btcAddress" class="wallet-address">bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n</div>
+        <button class="copy-button" onclick="copyToClipboard()">Copy Address</button>
+      </div>
+
+      <div id="statusMessage" class="status-message" aria-live="polite"></div>
+
+      <div style="display:flex; justify-content:center; gap:8px; margin-top:12px; flex-wrap:wrap;">
+        <button class="donate-button" onclick="openDonationPage('btc')">Donate BTC Now</button>
+        <button class="back-button" onclick="goBackToChooseMethod()">Back</button>
+      </div>
+
+      <p style="font-size:12px;color:#999;margin-top:12px;">Your donation helps us continue our work. Thank you! 🙏</p>
+    </div>
+  </div>
+
+  <!-- Story modal (full featured) -->
+  <div id="storyModal" class="story-modal" aria-hidden="true">
+    <div class="story-container" id="storyContainer" role="dialog" aria-modal="true" aria-label="Stories">
+      <div id="progressBars" class="progress-bars" aria-hidden="true"></div>
+      <div id="storyCount" class="story-count" aria-hidden="true"></div>
+
+      <!-- Story images: replace src with your story assets -->
+      <img src="https://via.placeholder.com/414x896/ff6b6b/ffffff?text=Story+1" class="story-image active" data-index="0" alt="Story 1">
+      <img src="https://via.placeholder.com/414x896/4ecdc4/ffffff?text=Story+2" class="story-image" data-index="1" alt="Story 2">
+      <img src="https://via.placeholder.com/414x896/45b7d1/ffffff?text=Story+3" class="story-image" data-index="2" alt="Story 3">
+
+      <button class="btn close-btn" id="storyCloseBtn" aria-label="close story">✕</button>
+
+      <button class="btn nav-btn nav-btn-left" id="prevStoryBtn" aria-label="previous story">◀</button>
+      <button class="btn nav-btn nav-btn-right" id="nextStoryBtn" aria-label="next story">▶</button>
+
+      <div class="story-controls" id="storyControls" aria-hidden="false">
+        <input id="replyInput" class="reply-input" placeholder="Reply to this story" aria-label="reply to story">
+        <button id="sendStoryBtn" class="send-btn" aria-label="send reply">➤</button>
+        <button id="likeStoryBtn" class="btn like-btn" aria-label="like story" title="Like">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
 
 <script>
-document.getElementById("year").textContent = new Date().getFullYear();
+/* ========== Basic page setup ========== */
+document.getElementById('year').textContent = new Date().getFullYear();
+
+/* Menu toggle */
+document.querySelector('.menu-btn')?.addEventListener('click', () => {
+  document.querySelector('nav')?.classList.toggle('open');
+});
 
 /* Tabs */
-document.querySelectorAll(".tab-btn").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab-btn").forEach(x=>x.classList.remove("active"));document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));b.classList.add("active");document.getElementById(b.dataset.tab).classList.add("active");});
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const target = btn.dataset.tab;
+    document.getElementById(target)?.classList.add('active');
+  });
+});
 
-/* Stories */
-const profilePic=document.getElementById('profilePic'),storyModal=document.getElementById('storyModal'),closeBtn=document.getElementById('closeBtn');
-const replyInput=document.getElementById('replyInput'),sendBtn=document.getElementById('sendBtn'),likeBtn=document.getElementById('likeBtn');
-const prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn');
-const storyImages=document.querySelectorAll('.story-image'),barsBox=document.getElementById('progressBars'),count=document.getElementById('storyCount');
-let idx=0,timer,total=storyImages.length,duration=5000,isLiked=false;
+/* ========== Chat functionality ========== */
+const messageBtn = document.querySelector('.message');
+const mainScreen = document.querySelector('.main-screen');
+const chatScreen = document.querySelector('.chat-screen');
+const backBtn = document.querySelector('.back-btn');
+const chatMessages = document.getElementById('chatMessages');
+const chatInput = document.getElementById('chatInput');
+const sendBtn = document.getElementById('sendBtn');
 
-function makeBars(){barsBox.innerHTML='';storyImages.forEach(()=>{let b=document.createElement('div');b.className='progress-bar';let f=document.createElement('div');f.className='progress-bar-fill';b.appendChild(f);barsBox.appendChild(b)});}
-function showStory(i){clearTimeout(timer);storyImages.forEach(im=>im.classList.remove('active'));storyImages[i].classList.add('active');let fills=document.querySelectorAll('.progress-bar-fill');fills.forEach((f,j)=>{f.style.transition='none';f.style.width=j<i?'100%':'0%';});void barsBox.offsetWidth;fills[i].style.transition=`width ${duration}ms linear`;requestAnimationFrame(()=>fills[i].style.width='100%');count.textContent=`${i+1}/${total}`;idx=i;isLiked=false;likeBtn.classList.remove('liked');updateNav();}
-function updateNav(){prevBtn.classList.toggle('visible',idx>0);nextBtn.classList.toggle('visible',idx<total-1);}
-function startTimer(){timer=setTimeout(()=>{if(idx<total-1){showStory(idx+1);startTimer();}else closeStory();},duration);}
-function closeStory(){clearTimeout(timer);storyModal.style.display='none';idx=0;replyInput.value='';sendBtn.classList.remove('visible');}
+function addMessage(text, sender = 'creator') {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'msg-wrapper';
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + (sender === 'creator' ? 'creator-msg' : 'user-msg');
+  msg.textContent = text;
+  wrapper.appendChild(msg);
+  chatMessages.appendChild(wrapper);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return wrapper;
+}
 
-profilePic.onclick=()=>{storyModal.style.display='flex';makeBars();showStory(0);startTimer();};
-closeBtn.onclick=closeStory;
-replyInput.oninput=()=>sendBtn.classList.toggle('visible',!!replyInput.value.trim());
-sendBtn.onclick=()=>{if(replyInput.value.trim()){alert("Reply: "+replyInput.value);replyInput.value='';sendBtn.classList.remove('visible');}};
-likeBtn.onclick=()=>{isLiked=!isLiked;likeBtn.classList.toggle('liked',isLiked);alert(isLiked?"Liked":"Unliked");};
-prevBtn.onclick=()=>{if(idx>0){clearTimeout(timer);showStory(idx-1);startTimer();}};
-nextBtn.onclick=()=>{if(idx<total-1){clearTimeout(timer);showStory(idx+1);startTimer();}else closeStory();};
+function addSeen(wrapper) {
+  const seen = document.createElement('div');
+  seen.className = 'seen';
+  seen.textContent = 'Seen';
+  wrapper.appendChild(seen);
+}
+
+function showTyping() {
+  const t = document.createElement('div');
+  t.className = 'typing';
+  t.textContent = 'Sofia is typing...';
+  chatMessages.appendChild(t);
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+  return t;
+}
+
+messageBtn?.addEventListener('click', () => {
+  mainScreen.style.display = 'none';
+  chatScreen.style.display = 'flex';
+  chatMessages.innerHTML = '';
+  setTimeout(() => addMessage('Welcome to my chat! 💬', 'creator'), 350);
+});
+
+backBtn?.addEventListener('click', () => {
+  chatScreen.style.display = 'none';
+  mainScreen.style.display = 'block';
+});
+
+sendBtn?.addEventListener('click', () => {
+  const text = chatInput.value.trim();
+  if (!text) return;
+  const wrapper = addMessage(text, 'user');
+  chatInput.value = '';
+  setTimeout(() => {
+    addSeen(wrapper);
+    const typingIndicator = showTyping();
+    setTimeout(() => {
+      typingIndicator.remove();
+      const replyWrapper = addMessage('', 'creator');
+      const inner = replyWrapper.querySelector('.msg');
+      inner.innerHTML = 'Check this out 👉 <a href="https://mywebsite.com" target="_blank" rel="noopener">https://mywebsite.com</a>';
+    }, 1400);
+  }, 700);
+});
+chatInput?.addEventListener('keypress', e => { if (e.key === 'Enter') sendBtn.click(); });
+
+/* ========== Donation flow ========== */
+function showModal(modalId) {
+  const el = document.getElementById(modalId);
+  if (el) el.style.display = 'flex';
+}
+function closeModal(modalId) {
+  const el = document.getElementById(modalId);
+  if (el) el.style.display = 'none';
+}
+function showBtcModal() {
+  closeModal('chooseMethodModal');
+  showModal('btcModal');
+}
+function goBackToChooseMethod() {
+  closeModal('btcModal');
+  showModal('chooseMethodModal');
+}
+
+document.getElementById('openDonate')?.addEventListener('click', () => showModal('chooseMethodModal'));
+
+/* Copy address with fallback */
+function fallbackCopyTextToClipboard(text) {
+  const textArea = document.createElement("textarea");
+  textArea.value = text;
+  // Avoid scrolling to bottom
+  textArea.style.position = "fixed";
+  textArea.style.left = "-9999px";
+  document.body.appendChild(textArea);
+  textArea.focus();
+  textArea.select();
+
+  try {
+    const successful = document.execCommand('copy');
+    document.body.removeChild(textArea);
+    return successful;
+  } catch (err) {
+    document.body.removeChild(textArea);
+    return false;
+  }
+}
+
+function copyToClipboard() {
+  const address = document.getElementById('btcAddress')?.textContent.trim() || '';
+  const statusEl = document.getElementById('statusMessage');
+  if (!address) {
+    statusEl.textContent = 'No address available.';
+    statusEl.className = 'status-message status-error';
+    statusEl.style.display = 'block';
+    setTimeout(()=>statusEl.style.display='none',3000);
+    return;
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(address).then(() => {
+      showStatusMessage('Address copied to clipboard! 📋', 'success');
+    }).catch(() => {
+      const ok = fallbackCopyTextToClipboard(address);
+      if (ok) showStatusMessage('Address copied to clipboard! 📋', 'success');
+      else showStatusMessage('Please copy the address manually.', 'error');
+    });
+  } else {
+    const ok = fallbackCopyTextToClipboard(address);
+    if (ok) showStatusMessage('Address copied to clipboard! 📋', 'success');
+    else showStatusMessage('Please copy the address manually.', 'error');
+  }
+}
+
+function showStatusMessage(message, type) {
+  const statusEl = document.getElementById('statusMessage');
+  statusEl.textContent = message;
+  statusEl.className = 'status-message ' + (type === 'success' ? 'status-success' : 'status-error');
+  statusEl.style.display = 'block';
+  setTimeout(() => statusEl.style.display = 'none', 3000);
+}
+
+/* Open external donation page and analytics hooks */
+function openDonationPage(method = 'btc') {
+  // Analytics (if available)
+  if (typeof ga !== 'undefined') {
+    ga('send', 'event', 'Donation', 'Click', method === 'btc' ? 'BTC Donate Button' : 'PayPal Donate Button');
+  } else if (typeof gtag !== 'undefined') {
+    gtag('event', 'click', { 'event_category': 'Donation', 'event_label': method === 'btc' ? 'BTC Donate Button' : 'PayPal Donate Button' });
+  }
+  if (method === 'btc') {
+    const addr = document.getElementById('btcAddress')?.textContent.trim();
+    if (addr) window.open('https://www.blockchain.com/explorer/addresses/btc/' + addr, '_blank');
+  }
+  closeModal('btcModal');
+}
+
+/* QR image error handling */
+window.addEventListener('load', () => {
+  const qrImage = document.getElementById('qrCode');
+  if (qrImage) {
+    qrImage.addEventListener('error', () => {
+      showStatusMessage('Failed to load QR code. Please try again later.', 'error');
+      qrImage.style.display = 'none';
+    });
+    qrImage.addEventListener('load', () => {
+      qrImage.style.display = 'block';
+    });
+  }
+
+  // Close donation modals by clicking outside content
+  const chooseModal = document.getElementById('chooseMethodModal');
+  const btcModal = document.getElementById('btcModal');
+  chooseModal?.addEventListener('click', e => { if (e.target === chooseModal) closeModal('chooseMethodModal'); });
+  btcModal?.addEventListener('click', e => { if (e.target === btcModal) closeModal('btcModal'); });
+});
+
+/* ========== Stories: full feature set ========== */
+const profilePic = document.getElementById('profilePic');
+const storyModal = document.getElementById('storyModal');
+const storyContainer = document.getElementById('storyContainer');
+const storyCloseBtn = document.getElementById('storyCloseBtn');
+const prevStoryBtn = document.getElementById('prevStoryBtn');
+const nextStoryBtn = document.getElementById('nextStoryBtn');
+const storyImages = Array.from(document.querySelectorAll('.story-image'));
+const progressBarsContainer = document.getElementById('progressBars');
+const storyCount = document.getElementById('storyCount');
+const replyInput = document.getElementById('replyInput');
+const sendStoryBtn = document.getElementById('sendStoryBtn');
+const likeStoryBtn = document.getElementById('likeStoryBtn');
+
+let currentStoryIndex = 0;
+let storyTimer = null;
+const storyDuration = 10000; // 10s per story (as in your detailed code)
+const totalStories = storyImages.length;
+let isLiked = false;
+let touchStartX = 0;
+
+/* Create progress bars based on number of stories */
+function createProgressBars() {
+  progressBarsContainer.innerHTML = '';
+  for (let i = 0; i < totalStories; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'progress-bar';
+    const fill = document.createElement('div');
+    fill.className = 'progress-bar-fill';
+    bar.appendChild(fill);
+    progressBarsContainer.appendChild(bar);
+  }
+}
+
+/* Update visibility of prev/next buttons */
+function updateNavButtons() {
+  if (currentStoryIndex === 0) {
+    prevStoryBtn.classList.remove('visible');
+    nextStoryBtn.classList.add('visible');
+  } else if (currentStoryIndex === totalStories - 1) {
+    prevStoryBtn.classList.add('visible');
+    nextStoryBtn.classList.remove('visible');
+  } else {
+    prevStoryBtn.classList.add('visible');
+    nextStoryBtn.classList.add('visible');
+  }
+}
+
+/* Show specified story index (handles progress reset + animation) */
+function showStory(index) {
+  clearTimeout(storyTimer);
+  if (index < 0) index = 0;
+  if (index >= totalStories) index = totalStories - 1;
+
+  // Activate image
+  storyImages.forEach(img => img.classList.remove('active'));
+  storyImages[index].classList.add('active');
+
+  // Reset progress fills
+  const fills = Array.from(document.querySelectorAll('.progress-bar-fill'));
+  fills.forEach((fill, i) => {
+    fill.style.transition = 'none';
+    fill.style.width = i < index ? '100%' : '0%';
+  });
+
+  // Force reflow then animate current fill
+  void progressBarsContainer.offsetWidth;
+  fills[index].style.transition = `width ${storyDuration}ms linear`;
+  requestAnimationFrame(() => {
+    fills[index].style.width = '100%';
+  });
+
+  // Update state and nav
+  currentStoryIndex = index;
+  storyCount.textContent = `${index + 1}/${totalStories}`;
+  isLiked = false;
+  likeStoryBtn.classList.remove('liked');
+  updateNavButtons();
+}
+
+/* Auto-advance timer */
+function startStoryTimer() {
+  clearTimeout(storyTimer);
+  storyTimer = setTimeout(() => {
+    if (currentStoryIndex < totalStories - 1) {
+      showStory(currentStoryIndex + 1);
+      startStoryTimer();
+    } else {
+      closeStoryModal();
+    }
+  }, storyDuration);
+}
+
+/* Open story modal and start */
+function openStoryModal() {
+  if (totalStories === 0) return;
+  storyModal.style.display = 'flex';
+  createProgressBars();
+  showStory(0);
+  startStoryTimer();
+}
+
+/* Close story modal and reset */
+function closeStoryModal() {
+  clearTimeout(storyTimer);
+  storyModal.style.display = 'none';
+  currentStoryIndex = 0;
+  replyInput.value = '';
+  sendStoryBtn.classList.remove('visible');
+  isLiked = false;
+  likeStoryBtn.classList.remove('liked');
+  // Reset progress bars
+  const fills = document.querySelectorAll('.progress-bar-fill');
+  fills.forEach(f => { f.style.transition = 'none'; f.style.width = '0%'; });
+  prevStoryBtn.classList.remove('visible');
+  nextStoryBtn.classList.remove('visible');
+}
+
+/* Toggle send button visibility */
+replyInput?.addEventListener('input', () => {
+  if (replyInput.value.trim()) sendStoryBtn.classList.add('visible');
+  else sendStoryBtn.classList.remove('visible');
+});
+
+/* Send reply (simulated) */
+sendStoryBtn?.addEventListener('click', () => {
+  const message = replyInput.value.trim();
+  if (!message) return;
+  // Put your actual DM API/send logic here
+  alert('Sending reply: ' + message);
+  replyInput.value = '';
+  sendStoryBtn.classList.remove('visible');
+});
+
+/* Enter key sends reply */
+replyInput?.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter' && replyInput.value.trim()) {
+    e.preventDefault();
+    sendStoryBtn.click();
+  }
+});
+
+/* Like / unlike */
+likeStoryBtn?.addEventListener('click', () => {
+  isLiked = !isLiked;
+  likeStoryBtn.classList.toggle('liked', isLiked);
+  if (isLiked) {
+    // simulate API call
+    alert('Liked the story!');
+  } else {
+    alert('Unliked the story!');
+  }
+});
+
+/* Prev / Next buttons */
+prevStoryBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentStoryIndex > 0) {
+    clearTimeout(storyTimer);
+    showStory(currentStoryIndex - 1);
+    startStoryTimer();
+  }
+});
+nextStoryBtn?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (currentStoryIndex < totalStories - 1) {
+    clearTimeout(storyTimer);
+    showStory(currentStoryIndex + 1);
+    startStoryTimer();
+  } else {
+    closeStoryModal();
+  }
+});
+
+/* Touch swipe support (mobile) */
+storyContainer?.addEventListener('touchstart', (e) => {
+  touchStartX = e.touches[0].clientX;
+});
+storyContainer?.addEventListener('touchend', (e) => {
+  const touchEndX = e.changedTouches[0].clientX;
+  if (touchStartX - touchEndX > 50) {
+    // swipe left -> next
+    if (currentStoryIndex < totalStories - 1) {
+      clearTimeout(storyTimer); showStory(currentStoryIndex + 1); startStoryTimer();
+    } else {
+      closeStoryModal();
+    }
+  } else if (touchEndX - touchStartX > 50) {
+    // swipe right -> prev
+    if (currentStoryIndex > 0) { clearTimeout(storyTimer); showStory(currentStoryIndex - 1); startStoryTimer(); }
+  }
+});
+
+/* Click to advance/rewind similar to Instagram */
+storyContainer?.addEventListener('click', (e) => {
+  // If click is on controls, ignore
+  if (e.target.closest('.story-controls') || e.target.closest('.nav-btn') || e.target.closest('.close-btn')) return;
+
+  const rect = storyContainer.getBoundingClientRect();
+  const clickX = e.clientX - rect.left;
+  const half = rect.width / 2;
+
+  if (clickX > half) {
+    // right half
+    if (currentStoryIndex < totalStories - 1) {
+      clearTimeout(storyTimer); showStory(currentStoryIndex + 1); startStoryTimer();
+    } else {
+      closeStoryModal();
+    }
+  } else {
+    // left half
+    if (currentStoryIndex > 0) {
+      clearTimeout(storyTimer); showStory(currentStoryIndex - 1); startStoryTimer();
+    }
+  }
+});
+
+/* Open/close story (profile click) */
+profilePic?.addEventListener('click', () => {
+  openStoryModal();
+});
+storyCloseBtn?.addEventListener('click', () => closeStoryModal());
+
+/* Close story by pressing Escape key */
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && storyModal.style.display === 'flex') {
+    closeStoryModal();
+  }
+});
+
+/* Prevent story clicks from closing donation modal etc. (z-index ordering already used) */
+
+/* Accessibility: allow keyboard prev/next inside story modal */
+document.addEventListener('keydown', (e) => {
+  if (storyModal.style.display !== 'flex') return;
+  if (e.key === 'ArrowRight') {
+    if (currentStoryIndex < totalStories - 1) { clearTimeout(storyTimer); showStory(currentStoryIndex + 1); startStoryTimer(); }
+    else closeStoryModal();
+  }
+  if (e.key === 'ArrowLeft') {
+    if (currentStoryIndex > 0) { clearTimeout(storyTimer); showStory(currentStoryIndex - 1); startStoryTimer(); }
+  }
+});
+
+/* Close story modal by clicking outside story container */
+storyModal?.addEventListener('click', (e) => {
+  if (e.target === storyModal) closeStoryModal();
+});
+
+/* Initialize nav visibility if needed */
+updateNavButtons();
+
 </script>
 </body>
 </html>
