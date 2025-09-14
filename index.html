@@ -47,11 +47,7 @@
 
     /* Chat */
     .chat-screen { display: none; flex-direction: column; height: 100vh; background: #fff; }
-    .chat-header {
-      display: flex; align-items: center; justify-content: space-between;
-      padding: .6rem 1rem; border-bottom: 1px solid #e5e7eb;
-      background: #fff; position: sticky; top: 0; z-index: 10;
-    }
+    .chat-header { display: flex; align-items: center; justify-content: space-between; padding: .6rem 1rem; border-bottom: 1px solid #e5e7eb; background: #fff; position: sticky; top: 0; z-index: 10; }
     .chat-header-left { display: flex; align-items: center; gap: .6rem; }
     .chat-header-left img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
     .chat-user-info { display: flex; flex-direction: column; line-height: 1.2; }
@@ -70,20 +66,21 @@
     .chat-input input { flex: 1; padding: .6rem; border: 1px solid #d1d5db; border-radius: 20px; outline: none; }
     .chat-input button { background: none; border: none; font-size: 1.2rem; margin-left: .6rem; cursor: pointer; color: var(--accent); }
 
-    /* Donation Modal */
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; }
-    .modal-content { background: #fff; padding: 20px; border-radius: 12px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 4px 10px rgba(0,0,0,0.2); position: relative; }
-    .close-btn { position: absolute; top: 10px; right: 15px; font-size: 20px; cursor: pointer; }
-    .qr-code { border: 2px solid #f7931a; border-radius: 10px; padding: 8px; margin: 10px auto; background: white; width: 100%; max-width: 200px; display: block; }
-    .wallet-address-container { display: flex; align-items: center; justify-content: center; margin: 10px 0; flex-wrap: wrap; gap: 8px; }
-    .wallet-address { word-break: break-all; font-family: monospace; font-size: 13px; color: #444; padding: 8px 10px; background: #f1f1f1; border-radius: 5px; flex: 1; text-align: center; }
+    /* Donation Modals */
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; }
+    .modal-content { position: relative; background: white; padding: 30px 20px 20px; border-radius: 12px; text-align: center; max-width: 420px; width: 90%; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .modal-button { padding: 10px 20px; margin: 5px; border: none; border-radius: 20px; cursor: pointer; font-size: 16px; font-weight: 600; color: white; }
+    .btc-button { background: linear-gradient(45deg, #f7931a, #ffbf00); }
+    .btc-button:hover { background: #e68a00; }
+    .paypal-button { background: #0070ba; }
+    .paypal-button:hover { background: #005ea6; }
+    .close-x-button { position: absolute; top: 10px; right: 10px; background: #f7931a; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; }
+    .wallet-address { word-break: break-all; font-family: monospace; font-size: 13px; color: #444; padding: 8px 10px; background: #f1f1f1; border-radius: 5px; }
     .copy-button { background: #28a745; color: white; padding: 6px 12px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; }
     .copy-button:hover { background: #218838; }
     .status-message { font-size: 14px; margin-top: 10px; display: none; }
     .status-success { color: #28a745; }
     .status-error { color: #dc3545; }
-    .donate-button { background: linear-gradient(45deg, #f7931a, #ffbf00); color: white; padding: 12px 24px; border: none; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; margin-top: 12px; box-shadow: 0 4px 8px rgba(247, 147, 26, 0.3); }
-    .donate-button:hover { box-shadow: 0 6px 12px rgba(247, 147, 26, 0.5); }
   </style>
 </head>
 <body>
@@ -93,13 +90,6 @@
       <h1 style="margin:0;font-size:1.25rem">Creator</h1>
       <button class="menu-btn">☰</button>
     </header>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Support</a></li>
-      </ul>
-    </nav>
     <section class="profile">
       <img src="profile.png" alt="Creator profile picture">
       <div class="creator-name">Sofia Creator <span class="verified">✔</span></div>
@@ -111,10 +101,11 @@
       <div class="actions">
         <button class="subscribe">Subscribe</button>
         <button class="message">Message</button>
-        <button class="donate" id="openDonate">Donate</button>
+        <button class="donate" id="donateButton">Donate</button>
       </div>
     </section>
 
+    <!-- Tabs -->
     <div class="tabs">
       <button class="tab-btn active" data-tab="photos">Photos</button>
       <button class="tab-btn" data-tab="reels">Reels</button>
@@ -135,7 +126,7 @@
     </section>
     <section id="exclusive" class="tab-content">
       <div class="media-grid">
-        <img src="exclusive1.jpg" alt="Exclusive content locked">
+        <img src="exclusive1.jpg" alt="Exclusive">
       </div>
       <p style="text-align:center;color:var(--muted)">Subscribe to unlock exclusive content ✨</p>
     </section>
@@ -166,30 +157,37 @@
     </div>
   </div>
 
-  <!-- Donation Modal -->
-  <div class="modal" id="donateModal">
+  <!-- Donation Choose Modal -->
+  <div id="chooseMethodModal" class="modal">
     <div class="modal-content">
-      <span class="close-btn" id="closeModal">&times;</span>
-      <h3>Support Us with Bitcoin! 🚀</h3>
-      <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n" alt="BTC QR Code" class="qr-code">
-      <p>Scan the QR code or copy the address below:</p>
-      <div class="wallet-address-container">
-        <div class="wallet-address" id="btcAddress">bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n</div>
-        <button class="copy-button" onclick="copyToClipboard()">Copy</button>
+      <h3>Choose Your Donation Method</h3>
+      <div>
+        <button class="modal-button btc-button" onclick="showBtcModal()">Donate with Bitcoin</button>
+        <form action="https://www.paypal.com/donate" method="post" target="_blank" style="display:inline;">
+          <input type="hidden" name="business" value="YOUR_PAYPAL_EMAIL@EXAMPLE.COM">
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="submit" class="modal-button paypal-button" value="Donate with PayPal">
+        </form>
       </div>
+    </div>
+  </div>
+
+  <!-- Bitcoin Modal -->
+  <div id="btcModal" class="modal">
+    <div class="modal-content">
+      <button class="close-x-button" onclick="closeModal('btcModal')">×</button>
+      <h3>Support Us with Bitcoin! 🚀</h3>
+      <img id="qrCode" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n" alt="BTC QR Code" style="max-width:200px;margin:10px auto;">
+      <p>Scan or copy the address:</p>
+      <div class="wallet-address">bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n</div>
+      <button class="copy-button" onclick="copyToClipboard()">Copy</button>
       <div id="statusMessage" class="status-message"></div>
-      <button class="donate-button" onclick="openDonationPage()">Donate BTC Now</button>
-      <p style="font-size:12px;color:#777;">Your donation helps us continue our work. Thank you! 🙏</p>
+      <button class="modal-button btc-button" onclick="openDonationPage()">Donate BTC Now</button>
     </div>
   </div>
 
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    // Menu toggle
-    document.querySelector(".menu-btn").addEventListener("click", () => {
-      document.querySelector("nav").classList.toggle("open");
-    });
 
     // Tabs
     document.querySelectorAll(".tab-btn").forEach(btn => {
@@ -222,7 +220,6 @@
       wrapper.appendChild(msg);
       chatMessages.appendChild(wrapper);
       chatMessages.scrollTop = chatMessages.scrollHeight;
-
       return wrapper;
     }
 
@@ -272,28 +269,33 @@
     });
     chatInput.addEventListener("keypress", e => { if (e.key === "Enter") sendBtn.click(); });
 
-    // Donation Modal
-    const modal = document.getElementById("donateModal");
-    const openBtn = document.getElementById("openDonate");
-    const closeBtn = document.getElementById("closeModal");
-    const btcAddress = document.getElementById("btcAddress").textContent.trim();
+    // Donation
+    const btcAddress = "bc1q0ehvhyeaqnzj7apuk0a6d4ureayfl038cs8r6n";
 
-    openBtn.onclick = () => modal.style.display = "flex";
-    closeBtn.onclick = () => modal.style.display = "none";
-    window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
+    document.getElementById("donateButton").addEventListener("click", () => {
+      showModal("chooseMethodModal");
+    });
 
+    function showModal(id) {
+      document.getElementById(id).style.display = "flex";
+    }
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+    function showBtcModal() {
+      closeModal("chooseMethodModal");
+      showModal("btcModal");
+    }
     function copyToClipboard() {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(btcAddress).then(() => {
-          showStatus("Address copied to clipboard! 📋", "success");
-        }).catch(() => showStatus("Failed to copy.", "error"));
-      } else {
-        showStatus("Please copy manually.", "error");
+          showStatusMessage("Copied! 📋", "success");
+        }).catch(() => showStatusMessage("Failed to copy", "error"));
       }
     }
-    function showStatus(msg, type) {
+    function showStatusMessage(message, type) {
       const status = document.getElementById("statusMessage");
-      status.textContent = msg;
+      status.textContent = message;
       status.className = "status-message status-" + type;
       status.style.display = "block";
       setTimeout(() => status.style.display = "none", 3000);
@@ -304,4 +306,3 @@
   </script>
 </body>
 </html>
-
